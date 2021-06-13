@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Post from 'App/Models/Post'
 import CreatePostValidator from 'App/Validators/CreatePostValidator'
-import UpdatePostValidator from 'App/Validators/UpdatePostValidator'
+import UpdatePostValidator from 'App/Validators/UpdatePostValidator_rnm'
 
 import _ from "lodash"
 
@@ -13,9 +13,6 @@ export default class PostsController {
     const max = 20
 
     return await Post.query().paginate(page, max)
-  }
-
-  public async create({ }: HttpContextContract) {
   }
 
   public async store({ auth, request, response }: HttpContextContract) {
@@ -42,9 +39,6 @@ export default class PostsController {
     }
   }
 
-  public async edit({ }: HttpContextContract) {
-  }
-
   public async update({ response, auth, params, request }: HttpContextContract) {
     await auth.authenticate();
     try {
@@ -54,16 +48,43 @@ export default class PostsController {
       }
 
       const post = await Post.findByOrFail('id', params?.id);
+
+      if (post.user_id != auth.user?.id) {
+        return response.unauthorized('Sem autorização, esta postagem não pertence a você');
+      }
+
       const payload = await request.validate(UpdatePostValidator);
-      console.log(payload);
-      // post.merge(payload);
-      // return await post.save();
+
+      post.title = payload.title
+      post.description = payload.description
+      post.html = payload.html
+      post.html_raw = payload.html_raw
+
+      await post.save()
+
+      return post;
     } catch (error) {
       response.unprocessableEntity(error);
     }
   }
 
-  public async destroy({ }: HttpContextContract) {
+  public async destroy({ response, auth, params }: HttpContextContract) {
+    await auth.authenticate();
+    try {
+      if (!auth.isAuthenticated) {
+        return response.unauthorized('Sem autorização, logue em sua conta');
+      }
 
+      const post = await Post.findByOrFail('id', params?.id);
+
+      if (post.user_id != auth.user?.id) {
+        return response.unauthorized('Sem autorização, esta postagem não pertence a você');
+      }
+
+      return await post.delete();
+
+    } catch (error) {
+      response.unprocessableEntity(error);
+    }
   }
 }
