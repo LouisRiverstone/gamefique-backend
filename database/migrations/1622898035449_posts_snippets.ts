@@ -9,7 +9,7 @@ export default class PostsSnippets extends BaseSchema {
       table.integer('post_id')
       table.foreign('post_id').references('id').inTable('posts')
       table.integer('snippet_id')
-      table.foreign('snippet_id').references('id').inTable('snippets')
+      table.foreign('snippet_id').references('id').inTable('snippets').onDelete('CASCADE')
       table.timestamps(true)
     })
   }

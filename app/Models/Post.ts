@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column, BelongsTo, hasMany, HasMany, afterCreate, computed } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, column, BelongsTo, hasMany, HasMany, afterCreate, computed, beforeDelete } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 import Comment from './Comment'
 import Snippet from './Snippet'
 
-import { writeFileSync, readFileSync } from 'fs';
+import { writeFileSync, readFileSync, unlink } from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 
 export default class Post extends BaseModel {
@@ -23,6 +23,9 @@ export default class Post extends BaseModel {
   @computed()
   public get html_raw() {
     return readFileSync(`app/Posts/${this.html}`, { encoding: 'utf8' }) || null;
+  }
+  public set html_raw(html_raw) {
+    writeFileSync(`app/Posts/${this.html}`, `${html_raw}`, { encoding: 'utf8', flag: 'w' })
   }
 
   @column()
@@ -43,12 +46,20 @@ export default class Post extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
+
   @afterCreate()
-  public static async savePostFile(post: Post) {
+  public static async createPostFile(post: Post) {
     const post_uuid = uuidv4();
     writeFileSync(`app/Posts/${post_uuid}.html`, `${post.html}`, { encoding: 'utf8', flag: 'w' })
     post.html = `${post_uuid}.html`
     post.save();
   }
 
+  @beforeDelete()
+  public static async deletePostFile(post: Post) {
+    unlink(`app/Posts/${post.html}`, (err) => {
+      if (err) throw err;
+      console.error(`app/Posts/${post.html} was deleted`);
+    });
+  }
 }

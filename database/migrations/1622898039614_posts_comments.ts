@@ -9,7 +9,7 @@ export default class PostsComments extends BaseSchema {
       table.integer('post_id')
       table.foreign('post_id').references('id').inTable('posts')
       table.integer('comment_id')
-      table.foreign('comment_id').references('id').inTable('comments')
+      table.foreign('comment_id').references('id').inTable('comments').onDelete('CASCADE')
       table.timestamps(true)
     })
   }
