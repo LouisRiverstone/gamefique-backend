@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Post from 'App/Models/Post'
 import CreatePostValidator from 'App/Validators/CreatePostValidator'
-import UpdatePostValidator from 'App/Validators/UpdatePostValidator_rnm'
+import UpdatePostValidator from 'App/Validators/UpdatePostValidator'
 
 import _ from "lodash"
 
