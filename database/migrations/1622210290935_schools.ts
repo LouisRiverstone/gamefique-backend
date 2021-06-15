@@ -5,7 +5,7 @@ export default class Schools extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.increments('id').primary()
       table.integer("city_id")
       table.foreign('city_id').references('id').inTable('cities')
       table.string('name')

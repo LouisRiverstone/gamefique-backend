@@ -5,7 +5,7 @@ export default class States extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.increments('id').primary()
       table.string('acronym', 2)
       table.string('name')
       table.timestamps(true)

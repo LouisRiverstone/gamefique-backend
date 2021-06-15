@@ -40,7 +40,11 @@ export default class PostsController {
       }
 
       await post.load((loader) => {
-        loader.load('comments', comments => { comments.preload('user') })
+        loader.load('comments', comments => {
+          comments.preload('user', user => {
+            user.preload('school').preload('formation_courses').preload('formation_institute');
+          })
+        })
       })
 
       return post

@@ -5,7 +5,7 @@ export default class Comments extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.increments('id').primary()
       table.text('comment');
       table.integer('user_id')
       table.foreign('user_id').references('id').inTable('users')

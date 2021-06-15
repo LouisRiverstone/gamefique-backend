@@ -4,8 +4,8 @@ import {
   column,
   beforeSave,
   BaseModel,
-  hasOne,
-  HasOne,
+  belongsTo,
+  BelongsTo,
   hasMany,
   HasMany
 } from '@ioc:Adonis/Lucid/Orm'
@@ -41,26 +41,24 @@ export default class user extends BaseModel {
   @column()
   public photo_cover: string
 
-  @hasOne(() => FormationInstitute, {
+  @belongsTo(() => FormationInstitute, {
     foreignKey: 'formation_institutes_id',
   })
-  public formation_institute: HasOne<typeof FormationInstitute>
+  public formation_institute: BelongsTo<typeof FormationInstitute>
 
   @column()
   public formation_courses_id: number
 
-  @hasOne(() => FormationCourse, {
+  @belongsTo(() => FormationCourse, {
     foreignKey: 'formation_courses_id',
   })
-  public formation_courses: HasOne<typeof FormationCourse>
+  public formation_courses: BelongsTo<typeof FormationCourse>
 
   @column()
   public school_id: number
 
-  @hasOne(() => School, {
-    foreignKey: 'school_id',
-  })
-  public school: HasOne<typeof School>
+  @belongsTo(() => School, { foreignKey: 'school_id' })
+  public school: BelongsTo<typeof School>
 
   @hasMany(() => Post)
   public posts: HasMany<typeof Post>

@@ -40,11 +40,14 @@ export default class CommentsController {
       }
 
       await comment.load(loader => {
-        loader.load('user').load('post')
+        loader.load('user', user => {
+          user.preload('school').preload('formation_courses').preload('formation_institute');
+        })
       })
 
       return comment
     } catch (error) {
+      console.error(error)
       return response.unprocessableEntity(error)
     }
 
