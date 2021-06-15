@@ -34,7 +34,7 @@ export default class Post extends BaseModel {
   @belongsTo(() => User, { foreignKey: 'user_id' })
   public user: BelongsTo<typeof User>
 
-  @hasMany(() => Comment)
+  @hasMany(() => Comment, { foreignKey: 'post_id' })
   public comments: HasMany<typeof Comment>
 
   @hasMany(() => Snippet)

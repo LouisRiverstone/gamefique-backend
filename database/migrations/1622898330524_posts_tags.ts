@@ -10,7 +10,6 @@ export default class PostsTags extends BaseSchema {
       table.foreign('post_id').references('id').inTable('posts')
       table.integer('tag_id')
       table.foreign('tag_id').references('id').inTable('tags')
-      table.timestamps(true)
     })
   }
 

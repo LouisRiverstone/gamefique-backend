@@ -33,7 +33,17 @@ export default class PostsController {
 
   public async show({ response, params }: HttpContextContract) {
     try {
-      return await Post.findByOrFail('id', params?.id);
+      const post = await Post.findBy('id', params?.id)
+
+      if (!post) {
+        return response.notFound("Não foi encontrado o Post")
+      }
+
+      await post.load((loader) => {
+        loader.load('comments', comments => { comments.preload('user') })
+      })
+
+      return post
     } catch (error) {
       return response.unprocessableEntity(error.messages);
     }

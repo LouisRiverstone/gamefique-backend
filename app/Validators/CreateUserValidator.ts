@@ -15,8 +15,9 @@ export default class CreateUserValidator {
 			rules.unique({ table: 'users', column: 'email' }),
 		]),
 		password: schema.string({}, [rules.required(), rules.minLength(6)]),
-		// formation_institutes_id: schema.number([rules.required()]),
-		// formation_courses_id: schema.number([rules.required()]),
+		formation_institutes_id: schema.number([rules.required()]),
+		formation_courses_id: schema.number([rules.required()]),
+		school_id: schema.number([rules.required()]),
 	})
 
 	public messages = {
@@ -29,5 +30,6 @@ export default class CreateUserValidator {
 		'email.email': "Precisa de um Email Válido para Cadastrar",
 		'formation_institutes_id.required': "Precisa de Uma Instituição De Formação",
 		'formation_courses_id.required': "Precisa de Um Curso de Formação",
+		'school_id.required': "Precisa de uma escola de Atuação",
 	}
 }

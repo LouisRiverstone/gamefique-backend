@@ -47,6 +47,12 @@ Route.group(async () => {
       Route.delete('/:id', 'PostsController.destroy')
     }).prefix('/posts');
 
+    Route.group(async () => {
+      Route.get('/', 'CommentsController.index')
+      Route.post('/', 'CommentsController.store')
+      Route.get('/:id', 'CommentsController.show')
+    }).prefix('/comment');
+
 
   }).prefix('/v1')
 }).prefix('/api')
