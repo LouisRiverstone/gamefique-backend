@@ -4,7 +4,7 @@ import User from './User'
 import Comment from './Comment'
 import Snippet from './Snippet'
 
-import { writeFileSync, readFileSync, unlink } from 'fs';
+import { writeFileSync, readFileSync, unlink, mkdirSync, existsSync } from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 
 export default class Post extends BaseModel {
@@ -18,14 +18,22 @@ export default class Post extends BaseModel {
   public description: string
 
   @column()
-  public html: string
+  public folder_uuid: string
+
+  @column()
+  public temp_html: string | null
 
   @computed()
-  public get html_raw() {
-    return readFileSync(`app/Posts/${this.html}`, { encoding: 'utf8' }) || null;
+  public get html() {
+    if (!this.folder_uuid) {
+      return null
+    }
+    return readFileSync(`app/Posts/${this.folder_uuid}/post.html`, { encoding: 'utf8' }) || null;
   }
-  public set html_raw(html_raw) {
-    writeFileSync(`app/Posts/${this.html}`, `${html_raw}`, { encoding: 'utf8', flag: 'w' })
+  public set html(html) {
+    if (this.folder_uuid) {
+      writeFileSync(`app/Posts/${this.folder_uuid}/post.html`, `${html}`, { encoding: 'utf8', flag: 'w' })
+    }
   }
 
   @column()
@@ -37,7 +45,7 @@ export default class Post extends BaseModel {
   @hasMany(() => Comment, { foreignKey: 'post_id' })
   public comments: HasMany<typeof Comment>
 
-  @hasMany(() => Snippet)
+  @hasMany(() => Snippet, { foreignKey: 'post_id' })
   public snippets: HasMany<typeof Snippet>
 
   @column.dateTime({ autoCreate: true })
@@ -49,17 +57,24 @@ export default class Post extends BaseModel {
 
   @afterCreate()
   public static async createPostFile(post: Post) {
-    const post_uuid = uuidv4();
-    writeFileSync(`app/Posts/${post_uuid}.html`, `${post.html}`, { encoding: 'utf8', flag: 'w' })
-    post.html = `${post_uuid}.html`
+    const uuid = uuidv4();
+    post.folder_uuid = uuid
+
+    if (!existsSync('app/Posts')) {
+      mkdirSync('app/Posts');
+    }
+
+    mkdirSync(`app/Posts/${post.folder_uuid}`);
+    writeFileSync(`app/Posts/${post.folder_uuid}/post.html`, `${post.temp_html}`, { encoding: 'utf8', flag: 'w' })
+    post.temp_html = null
+
     post.save();
   }
 
   @beforeDelete()
   public static async deletePostFile(post: Post) {
-    unlink(`app/Posts/${post.html}`, (err) => {
+    unlink(`app/Posts/${post.folder_uuid}/post.html`, (err) => {
       if (err) throw err;
-      console.error(`app/Posts/${post.html} was deleted`);
     });
   }
 }

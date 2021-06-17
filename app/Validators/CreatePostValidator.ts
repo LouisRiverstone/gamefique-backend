@@ -9,13 +9,13 @@ export default class CreatePostValidator {
 	public schema = schema.create({
 		title: schema.string({}, [rules.required(), rules.minLength(5)]),
 		description: schema.string({}, [rules.required()]),
-		html: schema.string({}, [rules.required()]),
+		temp_html: schema.string({}, [rules.required()]),
 	})
 
 
 	public messages = {
 		'title.required': "A postagem precisa de um título",
 		'description.required': "A postagem precisa de uma descrição",
-		'html.required': "A postagem precisa ter um corpo",
+		'temp_html.required': "A postagem precisa ter um corpo",
 	}
 }

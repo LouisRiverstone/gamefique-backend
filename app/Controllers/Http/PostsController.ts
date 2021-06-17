@@ -27,6 +27,7 @@ export default class PostsController {
       return await Post.create(_.merge(payload, { user_id: auth.user?.id }))
 
     } catch (error) {
+      console.error(error)
       return response.badRequest(error)
     }
   }
@@ -45,6 +46,8 @@ export default class PostsController {
             user.preload('school').preload('formation_courses').preload('formation_institute');
           })
         })
+
+        loader.load('snippets')
       })
 
       return post
