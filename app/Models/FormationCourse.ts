@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, hasOne, HasOne, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import FormationCoursesArea from './FormationCoursesArea'
 import FormationCoursesLevel from './FormationCoursesLevel'
 
@@ -16,11 +16,11 @@ export default class FormationCourse extends BaseModel {
   @column()
   public formation_courses_levels_id: number
 
-  @hasOne(() => FormationCoursesArea)
-  public formation_course_area: HasOne<typeof FormationCoursesArea>
+  @belongsTo(() => FormationCoursesArea, { foreignKey: 'formation_courses_areas_id' })
+  public formation_course_area: BelongsTo<typeof FormationCoursesArea>
 
-  @hasOne(() => FormationCoursesArea)
-  public formation_courses_levels: HasOne<typeof FormationCoursesLevel>
+  @belongsTo(() => FormationCoursesLevel, { foreignKey: 'formation_courses_levels_id' })
+  public formation_courses_levels: BelongsTo<typeof FormationCoursesLevel>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
