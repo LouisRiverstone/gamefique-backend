@@ -8,7 +8,6 @@ import CreateUserValidator from 'App/Validators/CreateUserValidator';
 export default class AuthController {
 
   public async login({ request, response, auth }: HttpContextContract) {
-
     const data = request.only(['email', 'password']);
     const user = await User.findBy('email', data.email);
 
@@ -19,7 +18,6 @@ export default class AuthController {
     if (user && await Hash.verify(user.password, data.password)) {
       return await auth.use('api').generate(user)
     }
-
 
     return response.unauthorized('Email ou Senha Incorretos');
   }
