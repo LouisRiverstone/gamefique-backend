@@ -12,7 +12,12 @@ export default class PostsController {
     const page = post?.page || 1
     const max = 20
 
-    return await Post.query().paginate(page, max)
+    return await Post.query()
+      .preload('comments')
+      .preload('user', user => {
+        user.preload('school').preload('formation_courses').preload('formation_institute');
+      })
+      .paginate(page, max)
   }
 
   public async store({ auth, request, response }: HttpContextContract) {
@@ -41,11 +46,16 @@ export default class PostsController {
       }
 
       await post.load((loader) => {
+
         loader.load('comments', comments => {
           comments.preload('user', user => {
             user.preload('school').preload('formation_courses').preload('formation_institute');
           })
         })
+
+        loader.load('user', user => {
+          user.preload('school').preload('formation_courses').preload('formation_institute');
+        });
 
         loader.load('snippets')
       })

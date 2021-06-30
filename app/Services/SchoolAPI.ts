@@ -2,6 +2,7 @@ import School from "App/Models/School";
 import SchoolType from "App/Models/SchoolType";
 import axios from "axios";
 import _ from "lodash"
+import NameFormatter from "App/Utils/NameFormatter";
 
 const URL_NAME = "http://educacao.dadosabertosbr.com/api/escolas"
 const URL_COD = "http://educacao.dadosabertosbr.com/api/escola"
@@ -45,7 +46,7 @@ export default class SchoolAPI {
 
         const data = {
           id: school.cod,
-          name: school.nome,
+          name: NameFormatter(school.nome),
           city_id: school.codCidade,
           school_type_id: type?.id
         }
@@ -77,4 +78,3 @@ export default class SchoolAPI {
     }
   }
 }
-

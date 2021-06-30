@@ -1,5 +1,6 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import SchoolSubject from 'App/Models/SchoolSubject'
+import NameFormatter from 'App/Utils/NameFormatter';
 
 export default class SchoolSubjectSeeder extends BaseSeeder {
   public async run() {
@@ -65,7 +66,10 @@ export default class SchoolSubjectSeeder extends BaseSeeder {
         id: 15,
         name: "MÚSICA"
       }
-    ]
+    ].map(grade => {
+      grade.name = NameFormatter(grade.name);
+      return grade
+    })
 
     await SchoolSubject.updateOrCreateMany('id', subjects);
   }

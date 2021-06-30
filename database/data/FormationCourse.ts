@@ -251,7 +251,8 @@ export default [
     [250, 8, 8, "863C01", "Ciências Militares - Bacharelado*", 2],
     [251, 8, 8, "863C02", "Ciências da Logística - Bacharelado*", 2],
     [252, 8, 8, "863F01", "Formação Militar - Bacharelado*", 2],
-    [253, 9, 999, "999990", "Outro curso de formação superior - Licenciatura", 1],
-    [254, 9, 999, "999991", "Outro curso de formação superior - Bacharelado", 2],
-    [255, 9, 999, "999992", "Outro curso de formação superior - Tecnológico", 3]
+    [253, 4, 4, "481C01", "Licienciatura em Computação - Licenciatura", 1],
+    [9997, 9, 999, "999990", "Outro curso de formação superior - Licenciatura", 1],
+    [9998, 9, 999, "999991", "Outro curso de formação superior - Bacharelado", 2],
+    [9999, 9, 999, "999992", "Outro curso de formação superior - Tecnológico", 3]
 ]
