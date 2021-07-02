@@ -27,10 +27,7 @@ export default class AuthController {
       const payload = await request.validate(CreateUserValidator)
       const user = await User.create(payload)
 
-      return {
-        user,
-        token: await auth.use('api').generate(user)
-      }
+      return await auth.use('api').generate(user)
     } catch (error) {
       return response.badRequest(error.messages)
     }
@@ -49,10 +46,10 @@ export default class AuthController {
           formation_courses.preload('formation_courses_levels')
         })
         loader.load('formation_institute')
+        loader.load('school')
       })
 
       return auth.user
-
 
     } catch (error) {
       response.unprocessableEntity(error)

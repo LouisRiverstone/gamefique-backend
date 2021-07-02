@@ -52,6 +52,8 @@ Route.group(async () => {
       Route.get('/', 'CommentsController.index')
       Route.post('/', 'CommentsController.store')
       Route.get('/:id', 'CommentsController.show')
+      Route.put('/:id', 'CommentsController.update')
+      Route.delete('/:id', 'CommentsController.destroy')
     }).prefix('/comment');
 
 

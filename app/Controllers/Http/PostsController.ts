@@ -50,7 +50,7 @@ export default class PostsController {
         loader.load('comments', comments => {
           comments.preload('user', user => {
             user.preload('school').preload('formation_courses').preload('formation_institute');
-          })
+          }).orderBy('updated_at', 'desc')
         })
 
         loader.load('user', user => {
