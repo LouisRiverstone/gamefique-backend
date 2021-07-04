@@ -19,6 +19,7 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import Application from '@ioc:Adonis/Core/Application'
 
 Route.group(async () => {
   Route.group(async () => {
@@ -27,6 +28,8 @@ Route.group(async () => {
       Route.post('register', 'AuthController.register')
       Route.post('login', 'AuthController.login')
       Route.get('user', 'AuthController.user')
+      Route.put('update', 'AuthController.update')
+      Route.post('photo', 'AuthController.photo')
     }).prefix('/auth');
 
     Route.group(async () => {
@@ -34,11 +37,9 @@ Route.group(async () => {
       Route.get('course', 'FormationCoursesController.index')
     }).prefix('/formation');
 
-
     Route.group(async () => {
       Route.get('/', 'SchoolsController.index')
     }).prefix('/schools');
-
 
     Route.group(async () => {
       Route.get('/', 'PostsController.index')
@@ -56,6 +57,15 @@ Route.group(async () => {
       Route.delete('/:id', 'CommentsController.destroy')
     }).prefix('/comment');
 
+    Route.group(async () => {
+      Route.get('/:id', 'UsersController.show')
+    }).prefix('/user');
+
+    Route.get('uploads/:filename', async ({ params, response }) => {
+      return response.attachment(
+        Application.tmpPath('uploads', params.filename)
+      )
+    })
 
   }).prefix('/v1')
 }).prefix('/api')

@@ -1,5 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-
+import User from 'App/Models/User'
 
 export default class UsersController {
 
@@ -11,10 +11,33 @@ export default class UsersController {
   }
 
   public async store({ }: HttpContextContract) {
-
   }
 
-  public async show({ }: HttpContextContract) {
+  public async show({ request, params, response }: HttpContextContract) {
+    try {
+      const user = await User.findBy('id', params?.id)
+
+      if (!user) {
+        return response.notFound("Não foi encontrado o Usuário")
+      }
+
+      await user.load(loader => {
+        loader.load('formation_courses', formation_courses => {
+          formation_courses.preload('formation_course_area')
+          formation_courses.preload('formation_courses_levels')
+        })
+        loader.load('school', school => {
+          school.preload('city', city => {
+            city.preload('state')
+          })
+        })
+        loader.load('formation_institute')
+      })
+
+      return user
+    } catch (error) {
+      return response.unprocessableEntity(error)
+    }
   }
 
   public async edit({ }: HttpContextContract) {
