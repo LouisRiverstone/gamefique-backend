@@ -14,6 +14,7 @@ export default class PostsController {
 
     return await Post.query()
       .preload('comments')
+      .preload('like')
       .preload('user', user => {
         user.preload('school').preload('formation_courses').preload('formation_institute');
       })
@@ -52,6 +53,8 @@ export default class PostsController {
             user.preload('school').preload('formation_courses').preload('formation_institute');
           }).orderBy('updated_at', 'desc')
         })
+
+        loader.load('like')
 
         loader.load('user', user => {
           user.preload('school').preload('formation_courses').preload('formation_institute');

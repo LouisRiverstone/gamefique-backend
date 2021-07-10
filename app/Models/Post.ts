@@ -3,6 +3,7 @@ import { BaseModel, belongsTo, column, BelongsTo, hasMany, HasMany, afterCreate,
 import User from './User'
 import Comment from './Comment'
 import Snippet from './Snippet'
+import Like from './Like'
 
 import { writeFileSync, readFileSync, unlink, mkdirSync, existsSync } from 'fs';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,16 +24,20 @@ export default class Post extends BaseModel {
   @column()
   public temp_html: string | null
 
+  @column()
+  public photo: string | null
+
+
   @computed()
   public get html() {
     if (!this.folder_uuid) {
       return null
     }
-    return readFileSync(`app/Posts/${this.folder_uuid}/post.html`, { encoding: 'utf8' }) || null;
+    return readFileSync(`tmp/posts/${this.folder_uuid}/post.html`, { encoding: 'utf8' }) || null;
   }
   public set html(html) {
     if (this.folder_uuid) {
-      writeFileSync(`app/Posts/${this.folder_uuid}/post.html`, `${html}`, { encoding: 'utf8', flag: 'w' })
+      writeFileSync(`tmp/posts/${this.folder_uuid}/post.html`, `${html}`, { encoding: 'utf8', flag: 'w' })
     }
   }
 
@@ -48,6 +53,9 @@ export default class Post extends BaseModel {
   @hasMany(() => Snippet, { foreignKey: 'post_id' })
   public snippets: HasMany<typeof Snippet>
 
+  @hasMany(() => Like, { foreignKey: 'post_id' })
+  public like: HasMany<typeof Like>
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
@@ -60,12 +68,12 @@ export default class Post extends BaseModel {
     const uuid = uuidv4();
     post.folder_uuid = uuid
 
-    if (!existsSync('app/Posts')) {
-      mkdirSync('app/Posts');
+    if (!existsSync('tmp/posts')) {
+      mkdirSync('tmp/posts');
     }
 
-    mkdirSync(`app/Posts/${post.folder_uuid}`);
-    writeFileSync(`app/Posts/${post.folder_uuid}/post.html`, `${post.temp_html}`, { encoding: 'utf8', flag: 'w' })
+    mkdirSync(`tmp/posts/${post.folder_uuid}`);
+    writeFileSync(`tmp/posts/${post.folder_uuid}/post.html`, `${post.temp_html}`, { encoding: 'utf8', flag: 'w' })
     post.temp_html = null
 
     post.save();
@@ -73,7 +81,7 @@ export default class Post extends BaseModel {
 
   @beforeDelete()
   public static async deletePostFile(post: Post) {
-    unlink(`app/Posts/${post.folder_uuid}/post.html`, (err) => {
+    unlink(`tmp/posts/${post.folder_uuid}/post.html`, (err) => {
       if (err) throw err;
     });
   }

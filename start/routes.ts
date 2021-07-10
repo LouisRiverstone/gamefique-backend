@@ -61,6 +61,12 @@ Route.group(async () => {
       Route.get('/:id', 'UsersController.show')
     }).prefix('/user');
 
+
+    Route.group(async () => {
+      Route.post('/', 'LikesController.store')
+    }).prefix('/like');
+
+
     Route.get('uploads/:filename', async ({ params, response }) => {
       return response.attachment(
         Application.tmpPath('uploads', params.filename)
