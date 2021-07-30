@@ -110,7 +110,6 @@ export default class PostsController {
   public async update({ response, auth, params, request }: HttpContextContract) {
     await auth.authenticate();
     try {
-
       if (!auth.isAuthenticated) {
         return response.unauthorized('Sem autorização, logue em sua conta');
       }
@@ -127,38 +126,8 @@ export default class PostsController {
 
       const payload = await request.validate(UpdatePostValidator);
 
-      post.title = payload.title
-      post.description = payload.description
-      post.html = payload.html
-      post.post_status_id = PostsStatus.PENDING
+      return await this.updatePost(post, payload, PostsStatus.PENDING)
 
-
-      if (payload.class_plans) {
-        const classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plans_id }, { duration: payload.class_plans.duration })
-
-        await classPlans.related('class_plan_activities').query().where('class_plan_id', classPlans.id).delete();
-        await classPlans.related('class_plan_objectives').query().where('class_plan_id', classPlans.id).delete();
-        await classPlans.related('class_plan_resources').query().where('class_plan_id', classPlans.id).delete();
-        await classPlans.related('class_plan_strategies').query().where('class_plan_id', classPlans.id).delete();
-
-        await classPlans.related('class_plan_activities').createMany(this.mapArraysToCreateModels(payload.class_plans.activities, 'class_plan_id', classPlans.id))
-        await classPlans.related('class_plan_objectives').createMany(this.mapArraysToCreateModels(payload.class_plans.objectives, 'class_plan_id', classPlans.id))
-        await classPlans.related('class_plan_resources').createMany(this.mapArraysToCreateModels(payload.class_plans.resources, 'class_plan_id', classPlans.id))
-        await classPlans.related('class_plan_strategies').createMany(this.mapArraysToCreateModels(payload.class_plans.strategies, 'class_plan_id', classPlans.id))
-      }
-
-      await post.save()
-
-      await post.load(loader => {
-        loader.load('class_plan', (class_plan) => {
-          class_plan.preload('class_plan_activities')
-          class_plan.preload('class_plan_objectives')
-          class_plan.preload('class_plan_resources')
-          class_plan.preload('class_plan_strategies')
-        })
-      })
-
-      return post;
     } catch (error) {
       response.unprocessableEntity(error);
     }
@@ -181,15 +150,9 @@ export default class PostsController {
         return response.unauthorized('Sem autorização, esta postagem não pertence a você');
       }
 
-      const { schema, messages } = new PublishPostValidator()
+      const payload = await request.validate(PublishPostValidator);
 
-      await validator.validate({
-        schema,
-        messages,
-        data: post
-      });
-
-      return post
+      return await this.updatePost(post, payload, PostsStatus.PUBLISHED)
     } catch (error) {
       console.error(error)
       response.unprocessableEntity(error);
@@ -216,7 +179,40 @@ export default class PostsController {
     }
   }
 
+  private async updatePost(post: Post, payload: any, postStatus: number) {
 
+    post.title = payload.title
+    post.description = payload.description
+    post.html = payload.html
+    post.post_status_id = postStatus
+
+    if (payload.class_plans) {
+      const classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plans_id }, { duration: payload.class_plans.duration })
+
+      await classPlans.related('class_plan_activities').query().where('class_plan_id', classPlans.id).delete();
+      await classPlans.related('class_plan_objectives').query().where('class_plan_id', classPlans.id).delete();
+      await classPlans.related('class_plan_resources').query().where('class_plan_id', classPlans.id).delete();
+      await classPlans.related('class_plan_strategies').query().where('class_plan_id', classPlans.id).delete();
+
+      await classPlans.related('class_plan_activities').createMany(this.mapArraysToCreateModels(payload.class_plans.activities, 'class_plan_id', classPlans.id))
+      await classPlans.related('class_plan_objectives').createMany(this.mapArraysToCreateModels(payload.class_plans.objectives, 'class_plan_id', classPlans.id))
+      await classPlans.related('class_plan_resources').createMany(this.mapArraysToCreateModels(payload.class_plans.resources, 'class_plan_id', classPlans.id))
+      await classPlans.related('class_plan_strategies').createMany(this.mapArraysToCreateModels(payload.class_plans.strategies, 'class_plan_id', classPlans.id))
+    }
+
+    await post.save()
+
+    await post.load(loader => {
+      loader.load('class_plan', (class_plan) => {
+        class_plan.preload('class_plan_activities')
+        class_plan.preload('class_plan_objectives')
+        class_plan.preload('class_plan_resources')
+        class_plan.preload('class_plan_strategies')
+      })
+    })
+
+    return post;
+  }
 
   private mapArraysToCreateModels(arrayToMap, property, value) {
     return arrayToMap.map((row: any) => {

@@ -3,9 +3,9 @@ import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
 export default class PostsStatus extends BaseModel {
 
-  public PENDING = 1;
-  public PUBLISHED = 2;
-  public BLOCKED = 3;
+  public static PENDING = 1;
+  public static PUBLISHED = 2;
+  public static BLOCKED = 3;
 
   @column({ isPrimary: true })
   public id: number
