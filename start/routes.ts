@@ -46,6 +46,7 @@ Route.group(async () => {
       Route.post('/', 'PostsController.store')
       Route.get('/:id', 'PostsController.show')
       Route.put('/:id', 'PostsController.update')
+      Route.post('/publish/:id', 'PostsController.publish')
       Route.delete('/:id', 'PostsController.destroy')
     }).prefix('/posts');
 
@@ -61,10 +62,13 @@ Route.group(async () => {
       Route.get('/:id', 'UsersController.show')
     }).prefix('/user');
 
-
     Route.group(async () => {
       Route.post('/', 'LikesController.store')
     }).prefix('/like');
+
+    Route.group(async () => {
+      Route.post('/', 'ClassPlansController.store')
+    }).prefix('/class_plans');
 
 
     Route.get('uploads/:filename', async ({ params, response }) => {

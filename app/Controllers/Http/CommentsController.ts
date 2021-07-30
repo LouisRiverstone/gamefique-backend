@@ -1,10 +1,9 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Comment from 'App/Models/Comment'
-import Post_Comment from 'App/Models/Post_Comment'
+
 import CreateCommentValidator from 'App/Validators/CreateCommentValidator'
 import UpdateCommentValidator from 'App/Validators/UpdateCommentValidator'
 
-import _ from "lodash"
 
 export default class CommentsController {
   public async index({ request }: HttpContextContract) {

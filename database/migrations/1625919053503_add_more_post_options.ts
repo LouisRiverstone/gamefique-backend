@@ -5,7 +5,7 @@ export default class AddMorePostOptions extends BaseSchema {
 
   public async up() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.string('photo')
+      table.string('photo').after('user_id')
     })
   }
 

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column, BelongsTo, hasMany, HasMany, afterCreate, computed, beforeDelete } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, column, BelongsTo, hasMany, HasMany, afterCreate, computed, beforeDelete, HasOne, hasOne, } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 import Comment from './Comment'
 import Snippet from './Snippet'
@@ -7,6 +7,8 @@ import Like from './Like'
 
 import { writeFileSync, readFileSync, unlink, mkdirSync, existsSync } from 'fs';
 import { v4 as uuidv4 } from 'uuid';
+import ClassPlan from './ClassPlan'
+import PostsStatus from './PostsStatus'
 
 export default class Post extends BaseModel {
   @column({ isPrimary: true })
@@ -56,12 +58,23 @@ export default class Post extends BaseModel {
   @hasMany(() => Like, { foreignKey: 'post_id' })
   public like: HasMany<typeof Like>
 
+  @column()
+  public class_plans_id: number
+
+  @hasOne(() => ClassPlan, { foreignKey: 'id' })
+  public class_plan: HasOne<typeof ClassPlan>
+
+  @column()
+  public post_status_id: number
+
+  @hasOne(() => PostsStatus)
+  public post_status: HasOne<typeof PostsStatus>
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
-
 
   @afterCreate()
   public static async createPostFile(post: Post) {
@@ -85,4 +98,5 @@ export default class Post extends BaseModel {
       if (err) throw err;
     });
   }
+
 }

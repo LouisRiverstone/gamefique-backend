@@ -1,17 +1,16 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class CreatePostValidator {
-	constructor(protected ctx: HttpContextContract) {
+export default class PublishPostValidator {
+	constructor(protected ctx?: HttpContextContract) {
 	}
 
 
 	public schema = schema.create({
 		title: schema.string({}, [rules.required(), rules.minLength(5)]),
 		description: schema.string({}, [rules.required()]),
-		temp_html: schema.string({}, [rules.required()]),
-		class_plans_id: schema.number.optional(),
-		class_plans: schema.object.optional().members({
+		html: schema.string({}, [rules.required()]),
+		class_plans: schema.object().members({
 			duration: schema.string({}, [rules.required()]),
 			objectives: schema.array().members(
 				schema.object().members({
@@ -41,9 +40,5 @@ export default class CreatePostValidator {
 	})
 
 
-	public messages = {
-		'title.required': "A postagem precisa de um título",
-		'description.required': "A postagem precisa de uma descrição",
-		'temp_html.required': "A postagem precisa ter um corpo",
-	}
+	public messages = {}
 }
