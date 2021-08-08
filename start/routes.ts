@@ -28,6 +28,7 @@ Route.group(async () => {
       Route.post('register', 'AuthController.register')
       Route.post('login', 'AuthController.login')
       Route.get('user', 'AuthController.user')
+      Route.get('posts', 'AuthController.posts')
       Route.put('update', 'AuthController.update')
       Route.post('photo', 'AuthController.photo')
     }).prefix('/auth');

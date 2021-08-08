@@ -67,7 +67,7 @@ export default class Post extends BaseModel {
   @column()
   public post_status_id: number
 
-  @hasOne(() => PostsStatus)
+  @hasOne(() => PostsStatus, { foreignKey: 'id' })
   public post_status: HasOne<typeof PostsStatus>
 
   @column.dateTime({ autoCreate: true })

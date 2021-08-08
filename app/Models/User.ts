@@ -60,7 +60,7 @@ export default class user extends BaseModel {
   @belongsTo(() => School, { foreignKey: 'school_id' })
   public school: BelongsTo<typeof School>
 
-  @hasMany(() => Post)
+  @hasMany(() => Post, { foreignKey: 'user_id' })
   public posts: HasMany<typeof Post>
 
   @hasMany(() => Comment)

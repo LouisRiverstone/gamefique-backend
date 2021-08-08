@@ -10,27 +10,27 @@ export default class PublishPostValidator {
 		title: schema.string({}, [rules.required(), rules.minLength(5)]),
 		description: schema.string({}, [rules.required()]),
 		html: schema.string({}, [rules.required()]),
-		class_plans: schema.object().members({
+		class_plan: schema.object().members({
 			duration: schema.string({}, [rules.required()]),
-			objectives: schema.array().members(
+			class_plan_objectives: schema.array().members(
 				schema.object().members({
 					description: schema.string({}, [rules.required()])
 				}
 				)
 			),
-			activities: schema.array().members(
+			class_plan_activities: schema.array().members(
 				schema.object().members({
 					description: schema.string({}, [rules.required()])
 				}
 				)
 			),
-			strategies: schema.array().members(
+			class_plan_strategies: schema.array().members(
 				schema.object().members({
 					description: schema.string({}, [rules.required()])
 				}
 				)
 			),
-			resources: schema.array().members(
+			class_plan_resources: schema.array().members(
 				schema.object().members({
 					description: schema.string({}, [rules.required()])
 				}

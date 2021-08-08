@@ -4,9 +4,10 @@ import PostsStatus from 'App/Models/PostsStatus'
 export default class PostStatusSeeder extends BaseSeeder {
   public async run() {
     const status = [
-      { id: 1, description: "PENDING" },
-      { id: 2, description: "PUBLISHED" },
-      { id: 3, description: "BLOCKED" },
+      { id: 1, description: "Pendente" },
+      { id: 2, description: "Publicado" },
+      { id: 3, description: "Excluido" },
+      { id: 4, description: "Banido" },
     ]
 
     await PostsStatus.updateOrCreateMany('id', status)

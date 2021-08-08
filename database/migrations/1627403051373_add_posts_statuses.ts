@@ -13,7 +13,6 @@ export default class AddPostsStatuses extends BaseSchema {
   public async down() {
     this.schema.alterTable(this.tableName, (table) => {
       table.dropForeign('post_status_id')
-
       table.dropColumn('post_status_id')
     })
   }

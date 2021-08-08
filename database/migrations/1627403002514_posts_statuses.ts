@@ -7,7 +7,6 @@ export default class PostsStatuses extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('description')
-      table.timestamps(true)
     })
   }
 

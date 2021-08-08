@@ -32,10 +32,20 @@ export default class UsersController {
           })
         })
         loader.load('formation_institute')
+
+        loader.load('posts', post => {
+          post.where('post_status_id', 2)
+          post.preload('comments')
+          post.preload('like')
+          post.preload('user', user => {
+            user.preload('school').preload('formation_courses').preload('formation_institute');
+          })
+        })
       })
 
       return user
     } catch (error) {
+      console.log(error)
       return response.unprocessableEntity(error)
     }
   }

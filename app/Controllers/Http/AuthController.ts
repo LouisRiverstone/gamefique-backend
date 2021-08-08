@@ -6,6 +6,7 @@ import Application from '@ioc:Adonis/Core/Application'
 
 import CreateUserValidator from 'App/Validators/CreateUserValidator';
 import UpdateUserValidator from 'App/Validators/UpdateUserValidator';
+import Post from 'App/Models/Post'
 
 
 
@@ -58,6 +59,36 @@ export default class AuthController {
       })
 
       return auth.user
+
+    } catch (error) {
+      response.unprocessableEntity(error)
+    }
+  }
+
+  public async posts({ response, auth, request }: HttpContextContract) {
+    const post = request.only['page']
+    const page = post?.page || 1
+    const max = 20
+
+    await auth.authenticate();
+    try {
+      if (!auth.isAuthenticated) {
+        return response.unauthorized('Sem autorização, logue em sua conta');
+      }
+
+      const { user } = await auth;
+
+      if (!user) {
+        return response.unauthorized('Registre-se antes de acessar seus posts');
+      }
+
+      return await Post.query().where('user_id', user.id).orderBy('updated_at', 'desc')
+        .preload('comments')
+        .preload('like')
+        .preload('post_status')
+        .preload('user', user => {
+          user.preload('school').preload('formation_courses').preload('formation_institute');
+        }).paginate(page, max)
 
     } catch (error) {
       response.unprocessableEntity(error)
