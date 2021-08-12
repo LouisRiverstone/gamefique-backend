@@ -1,14 +1,17 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column, BelongsTo, hasMany, HasMany, afterCreate, computed, beforeDelete, HasOne, hasOne, } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, column, BelongsTo, hasMany, HasMany, afterCreate, computed, beforeDelete, HasOne, hasOne, beforeFetch, beforeFind, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 import Comment from './Comment'
 import Snippet from './Snippet'
 import Like from './Like'
-
-import { writeFileSync, readFileSync, unlink, mkdirSync, existsSync } from 'fs';
-import { v4 as uuidv4 } from 'uuid';
 import ClassPlan from './ClassPlan'
 import PostsStatus from './PostsStatus'
+import SchoolSubject from './SchoolSubject'
+import Tag from './Tag'
+
+import { softDelete, softDeleteQuery } from '../Services/SoftDelete'
+import { writeFileSync, readFileSync, unlink, mkdirSync, existsSync } from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 
 export default class Post extends BaseModel {
   @column({ isPrimary: true })
@@ -70,11 +73,25 @@ export default class Post extends BaseModel {
   @hasOne(() => PostsStatus, { foreignKey: 'id' })
   public post_status: HasOne<typeof PostsStatus>
 
+  @column()
+  public school_subject_id: number
+
+  @hasOne(() => SchoolSubject, { foreignKey: 'id' })
+  public school_subject: HasOne<typeof SchoolSubject>
+
+  @manyToMany(() => Tag, {
+    pivotTable: 'posts_tags',
+  })
+  public tags: ManyToMany<typeof Tag>
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @column.dateTime()
+  public deletedAt: DateTime
 
   @afterCreate()
   public static async createPostFile(post: Post) {
@@ -99,4 +116,13 @@ export default class Post extends BaseModel {
     });
   }
 
+  @beforeFind()
+  public static softDeletesFind = softDeleteQuery;
+
+  @beforeFetch()
+  public static softDeletesFetch = softDeleteQuery;
+
+  public async softDelete(column?: string) {
+    await softDelete(this, column);
+  }
 }

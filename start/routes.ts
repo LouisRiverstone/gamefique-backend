@@ -71,6 +71,14 @@ Route.group(async () => {
       Route.post('/', 'ClassPlansController.store')
     }).prefix('/class_plans');
 
+    Route.group(async () => {
+      Route.get('/', 'TagsController.index')
+    }).prefix('/tags');
+
+    Route.group(async () => {
+      Route.get('/', 'SchoolSubjectsController.index')
+    }).prefix('/school_subjects');
+
 
     Route.get('uploads/:filename', async ({ params, response }) => {
       return response.attachment(

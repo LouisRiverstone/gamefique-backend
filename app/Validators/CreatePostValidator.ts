@@ -11,6 +11,8 @@ export default class CreatePostValidator {
 		description: schema.string({}, [rules.required()]),
 		temp_html: schema.string({}, [rules.required()]),
 		class_plans_id: schema.number.optional(),
+		school_subject_id: schema.number([rules.required()]),
+		tags: schema.array().members(schema.number()),
 		class_plans: schema.object.optional().members({
 			duration: schema.string({}, [rules.required()]),
 			objectives: schema.array().members(
@@ -45,5 +47,7 @@ export default class CreatePostValidator {
 		'title.required': "A postagem precisa de um título",
 		'description.required': "A postagem precisa de uma descrição",
 		'temp_html.required': "A postagem precisa ter um corpo",
+		'tag_id.required': "A postagem precisa de uma tag",
+		'school_subject_id.required': "A postagem precisa de uma Matéria",
 	}
 }

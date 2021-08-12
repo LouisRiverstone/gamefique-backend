@@ -9,6 +9,8 @@ export default class UpdatePostValidator {
 		title: schema.string({}, [rules.required(), rules.minLength(5)]),
 		description: schema.string({}, [rules.required()]),
 		html: schema.string({}, [rules.required()]),
+		school_subject_id: schema.number([rules.required()]),
+		tags: schema.array().members(schema.number()),
 		class_plans_id: schema.number.optional(),
 		class_plans: schema.object.optional().members({
 			duration: schema.string({}, [rules.required()]),
@@ -43,5 +45,7 @@ export default class UpdatePostValidator {
 		'title.required': "A postagem precisa de um título",
 		'description.required': "A postagem precisa de uma descrição",
 		'html.required': "A postagem precisa ter um HTML",
+		'tag_id.required': "A postagem precisa de uma tag",
+		'school_subject_id.required': "A postagem precisa de uma Matéria",
 	}
 }

@@ -15,6 +15,8 @@ export default class PostsController {
     return await Post.query().where('post_status_id', 2)
       .preload('comments')
       .preload('like')
+      .preload('tags')
+      .preload('school_subject')
       .preload('user', user => {
         user.preload('school').preload('formation_courses').preload('formation_institute');
       })
@@ -38,7 +40,13 @@ export default class PostsController {
       temporaryPost.temp_html = payload.temp_html
       temporaryPost.post_status_id = 1
 
+      temporaryPost.school_subject_id = payload.school_subject_id
+
       let post = await Post.create(temporaryPost);
+
+      if (payload.tags && payload.tags.length > 0) {
+        post.related('tags').sync(payload.tags);
+      }
 
       if (payload.class_plans) {
         const classPlans = await post.related('class_plan').create({ duration: payload.class_plans.duration });
@@ -47,9 +55,9 @@ export default class PostsController {
         await classPlans.related('class_plan_objectives').createMany(this.mapArraysToCreateModels(payload.class_plans.objectives, 'class_plan_id', classPlans.id))
         await classPlans.related('class_plan_resources').createMany(this.mapArraysToCreateModels(payload.class_plans.resources, 'class_plan_id', classPlans.id))
         await classPlans.related('class_plan_strategies').createMany(this.mapArraysToCreateModels(payload.class_plans.strategies, 'class_plan_id', classPlans.id))
-
-        await post.save();
       }
+
+      await post.save();
 
       await post.load(loader => {
         loader.load('class_plan', (class_plan) => {
@@ -85,7 +93,8 @@ export default class PostsController {
         })
 
         loader.load('like')
-
+        loader.load('tags')
+        loader.load('school_subject')
         loader.load('class_plan', class_plan => {
           class_plan
             .preload('class_plan_activities')
@@ -185,6 +194,11 @@ export default class PostsController {
     post.description = payload.description
     post.html = payload.html
     post.post_status_id = postStatus
+    post.school_subject_id = payload.school_subject_id
+
+    if (payload.tags && payload.tags.length > 0) {
+      post.related('tags').sync(payload.tags);
+    }
 
     if (payload.class_plans) {
       const classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plans_id }, { duration: payload.class_plans.duration })
@@ -203,6 +217,8 @@ export default class PostsController {
     await post.save()
 
     await post.load(loader => {
+      loader.load('tags')
+      loader.load('school_subject')
       loader.load('class_plan', (class_plan) => {
         class_plan.preload('class_plan_activities')
         class_plan.preload('class_plan_objectives')
