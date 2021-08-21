@@ -1,26 +1,56 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { validator } from '@ioc:Adonis/Core/Validator'
 import Post from 'App/Models/Post'
 import PostsStatus from 'App/Models/PostsStatus'
 import CreatePostValidator from 'App/Validators/CreatePostValidator'
 import PublishPostValidator from 'App/Validators/PublishPostValidator'
 import UpdatePostValidator from 'App/Validators/UpdatePostValidator'
 
+import moment from "moment"
+
 export default class PostsController {
   public async index({ request }: HttpContextContract) {
-    const post = request.only['page']
+    const post = request.only(['page', 'tag', 'search'])
     const page = post?.page || 1
     const max = 20
 
-    return await Post.query().where('post_status_id', 2)
-      .preload('comments')
+    const postList = Post.query().where('post_status_id', 2).whereNull('deletedAt').preload('comments')
       .preload('like')
       .preload('tags')
       .preload('school_subject')
       .preload('user', user => {
         user.preload('school').preload('formation_courses').preload('formation_institute');
       })
-      .paginate(page, max)
+
+    if (post.search && post.search.length > 0) {
+      postList.where('title', 'LIKE', `%${post.search}%`).orWhere('description', 'LIKE', `%${post.search}%`)
+    }
+
+    if (post.tag) {
+      postList.whereHas('tags', (query) => {
+        query.where('tags.id', post.tag)
+      })
+    }
+
+    return await postList.paginate(page, max)
+  }
+
+  public async topPosts({ }: HttpContextContract) {
+
+    const startDate = moment().format('YYYY-MM-DD HH:mm:ss');
+    const endDate = moment().subtract(1, 'months').format('YYYY-MM-DD HH:mm:ss');
+
+    const postList = Post.query()
+      .where('post_status_id', 2)
+      .whereNull('deletedAt')
+      .preload('like')
+      .withAggregate('like', (query) => {
+        query.countDistinct('user_id').as('likes')
+      })
+      .preload('user')
+      .whereRaw(`updated_at BETWEEN '${endDate}' AND '${startDate}'`)
+      .orderBy('likes', 'desc').limit(5)
+
+    return await postList
   }
 
   public async store({ auth, request, response }: HttpContextContract) {
