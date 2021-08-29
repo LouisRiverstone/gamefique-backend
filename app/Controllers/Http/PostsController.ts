@@ -1,11 +1,14 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { cuid } from '@ioc:Adonis/Core/Helpers'
 import Post from 'App/Models/Post'
+import Application from '@ioc:Adonis/Core/Application'
 import PostsStatus from 'App/Models/PostsStatus'
 import CreatePostValidator from 'App/Validators/CreatePostValidator'
 import PublishPostValidator from 'App/Validators/PublishPostValidator'
 import UpdatePostValidator from 'App/Validators/UpdatePostValidator'
 
 import moment from "moment"
+import PublishPostPhotoValidator from 'App/Validators/PublishPostPhotoValidator'
 
 export default class PostsController {
   public async index({ request }: HttpContextContract) {
@@ -79,13 +82,26 @@ export default class PostsController {
       }
 
       if (payload.class_plans) {
-        const classPlans = await post.related('class_plan').create({ duration: payload.class_plans.duration });
+        let classPlans;
+
+        if (payload.class_plans_id != null) {
+          classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plans_id }, { duration: payload.class_plans.duration })
+        } else {
+          classPlans = await post.related('class_plan').create({ duration: payload.class_plans.duration })
+        }
+
+
+        await classPlans.related('class_plan_activities').query().where('class_plan_id', classPlans.id).delete();
+        await classPlans.related('class_plan_objectives').query().where('class_plan_id', classPlans.id).delete();
+        await classPlans.related('class_plan_resources').query().where('class_plan_id', classPlans.id).delete();
+        await classPlans.related('class_plan_strategies').query().where('class_plan_id', classPlans.id).delete();
 
         await classPlans.related('class_plan_activities').createMany(this.mapArraysToCreateModels(payload.class_plans.activities, 'class_plan_id', classPlans.id))
         await classPlans.related('class_plan_objectives').createMany(this.mapArraysToCreateModels(payload.class_plans.objectives, 'class_plan_id', classPlans.id))
         await classPlans.related('class_plan_resources').createMany(this.mapArraysToCreateModels(payload.class_plans.resources, 'class_plan_id', classPlans.id))
         await classPlans.related('class_plan_strategies').createMany(this.mapArraysToCreateModels(payload.class_plans.strategies, 'class_plan_id', classPlans.id))
       }
+
 
       await post.save();
 
@@ -218,6 +234,50 @@ export default class PostsController {
     }
   }
 
+  public async photo({ request, response, auth }: HttpContextContract) {
+    await auth.authenticate();
+    try {
+      if (!auth.isAuthenticated) {
+        return response.unauthorized('Sem autorização, logue em sua conta');
+      }
+
+      const payload = await request.validate(PublishPostPhotoValidator);
+
+
+      let post = await Post.findByOrFail('id', payload.post_id);
+
+      if (post.user_id != auth.user?.id) {
+        return response.unauthorized('Sem autorização, esta postagem não pertence a você');
+      }
+
+      const photo = request.file('photo', {
+        size: '2mb',
+        extnames: ['jpg', 'png', 'gif'],
+      })
+
+      if (!photo) {
+        return response.unprocessableEntity('Nenhuma foto anexada');
+      }
+
+      if (!photo.isValid) {
+        return response.unprocessableEntity("Envie uma foto em um dos formatos ('jpg', 'png', 'gif') de no maximo 2mb")
+      }
+
+      const fileName = `${cuid()}.${photo.extname}`
+      await photo.move(Application.tmpPath('uploads'), { name: fileName })
+
+      post.photo = fileName;
+
+      await post.save()
+
+      return { file: fileName }
+
+    } catch (error) {
+      console.error(error)
+      return response.unprocessableEntity(error)
+    }
+  }
+
   private async updatePost(post: Post, payload: any, postStatus: number) {
 
     post.title = payload.title
@@ -231,7 +291,14 @@ export default class PostsController {
     }
 
     if (payload.class_plans) {
-      const classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plans_id }, { duration: payload.class_plans.duration })
+      let classPlans;
+
+      if (payload.class_plans_id != null) {
+        classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plans_id }, { duration: payload.class_plans.duration })
+      } else {
+        classPlans = await post.related('class_plan').create({ duration: payload.class_plans.duration })
+      }
+
 
       await classPlans.related('class_plan_activities').query().where('class_plan_id', classPlans.id).delete();
       await classPlans.related('class_plan_objectives').query().where('class_plan_id', classPlans.id).delete();

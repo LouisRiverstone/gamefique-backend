@@ -49,6 +49,7 @@ Route.group(async () => {
       Route.get('/:id', 'PostsController.show')
       Route.put('/:id', 'PostsController.update')
       Route.post('/publish/:id', 'PostsController.publish')
+      Route.post('/photo', 'PostsController.photo')
       Route.delete('/:id', 'PostsController.destroy')
     }).prefix('/posts');
 
