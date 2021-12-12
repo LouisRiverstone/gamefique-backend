@@ -15,7 +15,7 @@ export default class CreatePostValidator {
 		tags: schema.array().members(schema.number()),
 		class_plan: schema.object.optional().members({
 			id: schema.number.optional([rules.exists({ table: 'class_plans', column: 'id' })]),
-			duration: schema.string({}, [rules.required()]),
+			duration: schema.string.optional(),
 			objectives: schema.array().members(
 				schema.object().members({
 					description: schema.string({}, [rules.required()])

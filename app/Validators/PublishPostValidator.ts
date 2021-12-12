@@ -49,5 +49,6 @@ export default class PublishPostValidator {
 		'temp_html.required': "A postagem precisa ter um corpo",
 		'tag_id.required': "A postagem precisa de uma tag",
 		'school_subject_id.required': "A postagem precisa de uma Matéria",
+		'class_plan.duration.string': "A postagem precisa de uma Duração",
 	}
 }
