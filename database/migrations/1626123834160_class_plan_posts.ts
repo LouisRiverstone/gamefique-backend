@@ -5,8 +5,8 @@ export default class ClassPlanPosts extends BaseSchema {
 
   public async up() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.integer('class_plans_id').nullable().after('user_id')
-      table.foreign('class_plans_id').references('id').inTable('class_plans').onDelete('CASCADE')
+      table.integer('class_plans_id').nullable().after('user_id').unsigned()
+      table.foreign('class_plans_id').references('id').inTable('class_plans')
     })
   }
 

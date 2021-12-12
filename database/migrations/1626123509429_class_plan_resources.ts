@@ -6,9 +6,9 @@ export default class ClassPlanResources extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.string('description')
-      table.integer('class_plan_id').nullable()
-      table.foreign('class_plan_id').references('id').inTable('class_plan').onDelete('CASCADE')
-      table.timestamps(true)
+      table.integer('class_plan_id').unsigned().nullable()
+      table.timestamps(true, true)
+      table.foreign('class_plan_id').references('id').inTable('class_plans').onDelete('CASCADE')
     })
   }
 

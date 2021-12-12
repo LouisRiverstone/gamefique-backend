@@ -6,12 +6,10 @@ export default class Schools extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
-      table.integer("city_id")
-      table.foreign('city_id').references('id').inTable('cities')
+      table.integer("city_id").unsigned()
       table.string('name')
-      table.integer('school_type_id')
-      table.foreign('school_type_id').references('id').inTable('school_type')
-      table.timestamps(true)
+      table.timestamps(true, true)
+      table.foreign('city_id').references('id').inTable('cities')
     })
   }
 

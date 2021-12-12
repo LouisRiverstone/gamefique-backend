@@ -9,7 +9,7 @@ export default class FormationInstitutes extends BaseSchema {
       table.integer('ies_code')
       table.text('name')
       table.text('type')
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

@@ -9,10 +9,10 @@ export default class Posts extends BaseSchema {
       table.string('title')
       table.string('description')
       table.string('folder_uuid')
-      table.string('temp_html')
-      table.integer('user_id')
+      table.text('temp_html', 'longtext')
+      table.integer('user_id').unsigned()
+      table.timestamps(true, true)
       table.foreign('user_id').references('id').inTable('users')
-      table.timestamps(true)
     })
   }
 

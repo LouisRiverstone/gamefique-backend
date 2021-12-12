@@ -8,7 +8,7 @@ export default class SchoolTypes extends BaseSchema {
       table.increments('id').primary()
       table.string('name')
       table.boolean('is_public')
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

@@ -6,10 +6,10 @@ export default class PostsTags extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
-      table.integer('post_id')
-      table.foreign('post_id').references('id').inTable('posts').onDelete('cascade')
-      table.integer('tag_id')
-      table.foreign('tag_id').references('id').inTable('tags').onDelete('cascade')
+      table.integer('post_id').unsigned()
+      table.integer('tag_id').unsigned()
+      table.foreign('post_id').references('id').inTable('posts')
+      table.foreign('tag_id').references('id').inTable('tags')
     })
   }
 

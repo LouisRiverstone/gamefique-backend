@@ -13,7 +13,8 @@ export default class CreatePostValidator {
 		class_plans_id: schema.number.optional(),
 		school_subject_id: schema.number([rules.required()]),
 		tags: schema.array().members(schema.number()),
-		class_plans: schema.object.optional().members({
+		class_plan: schema.object.optional().members({
+			id: schema.number.optional([rules.exists({ table: 'class_plans', column: 'id' })]),
 			duration: schema.string({}, [rules.required()]),
 			objectives: schema.array().members(
 				schema.object().members({

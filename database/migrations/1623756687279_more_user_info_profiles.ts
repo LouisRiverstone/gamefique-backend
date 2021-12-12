@@ -5,10 +5,10 @@ export default class MoreUserInfoProfiles extends BaseSchema {
 
   public async up() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.integer('school_id').nullable().after('remember_me_token')
-      table.foreign('school_id').references('id').inTable('schools')
+      table.integer('school_id').nullable().after('remember_me_token').unsigned()
       table.string('photo').nullable().after('remember_me_token')
       table.string('photo_cover').nullable().after('remember_me_token')
+      table.foreign('school_id').references('id').inTable('schools')
     })
   }
 

@@ -8,9 +8,7 @@ export default class Snippets extends BaseSchema {
       table.increments('id').primary()
       table.string('name')
       table.string('link')
-      table.integer('post_id')
-      table.foreign('post_id').references('id').inTable('posts')
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

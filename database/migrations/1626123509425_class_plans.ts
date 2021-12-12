@@ -7,7 +7,7 @@ export default class ClassPlans extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('duration')
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

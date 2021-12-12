@@ -15,16 +15,16 @@ export default class ClassPlan extends BaseModel {
   public duration: string
 
   @hasMany(() => ClassPlanObjective, { foreignKey: 'class_plan_id' })
-  public class_plan_objectives: HasMany<typeof ClassPlanObjective>
+  public objectives: HasMany<typeof ClassPlanObjective>
 
   @hasMany(() => ClassPlanActivity, { foreignKey: 'class_plan_id' })
-  public class_plan_activities: HasMany<typeof ClassPlanActivity>
+  public activities: HasMany<typeof ClassPlanActivity>
 
   @hasMany(() => ClassPlanStrategy, { foreignKey: 'class_plan_id' })
-  public class_plan_strategies: HasMany<typeof ClassPlanStrategy>
+  public strategies: HasMany<typeof ClassPlanStrategy>
 
   @hasMany(() => ClassPlanResource, { foreignKey: 'class_plan_id' })
-  public class_plan_resources: HasMany<typeof ClassPlanResource>
+  public resources: HasMany<typeof ClassPlanResource>
 
   @belongsTo(() => Post, { foreignKey: 'class_plan_resources_id' })
   public post: BelongsTo<typeof Post>

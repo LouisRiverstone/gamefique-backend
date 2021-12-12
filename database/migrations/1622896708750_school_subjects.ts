@@ -7,7 +7,7 @@ export default class SchoolSubjects extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
       table.string('name')
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

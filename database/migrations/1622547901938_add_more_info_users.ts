@@ -5,9 +5,9 @@ export default class AddMoreInfoUsers extends BaseSchema {
 
   public async up() {
     this.schema.table(this.tableName, (table) => {
-      table.integer('formation_institutes_id')
+      table.integer('formation_institutes_id').unsigned()
       table.foreign('formation_institutes_id').references('id').inTable('formation_institutes')
-      table.integer('formation_courses_id')
+      table.integer('formation_courses_id').unsigned()
       table.foreign('formation_courses_id').references('id').inTable('formation_courses')
     })
   }

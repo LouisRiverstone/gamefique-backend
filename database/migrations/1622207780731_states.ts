@@ -8,7 +8,7 @@ export default class States extends BaseSchema {
       table.increments('id').primary()
       table.string('acronym', 2)
       table.string('name')
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

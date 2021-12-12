@@ -7,11 +7,9 @@ export default class Comments extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
       table.text('comment');
-      table.integer('user_id')
+      table.integer('user_id').unsigned()
+      table.timestamps(true, true)
       table.foreign('user_id').references('id').inTable('users')
-      table.integer('post_id')
-      table.foreign('post_id').references('id').inTable('posts')
-      table.timestamps(true)
     })
   }
 

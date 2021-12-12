@@ -13,26 +13,27 @@ export default class PublishPostValidator {
 		school_subject_id: schema.number([rules.required()]),
 		tags: schema.array().members(schema.number([rules.required()])),
 		class_plan: schema.object().members({
+			id: schema.number([rules.required(), rules.exists({ table: 'class_plans', column: 'id' })]),
 			duration: schema.string({}, [rules.required()]),
-			class_plan_objectives: schema.array().members(
+			objectives: schema.array().members(
 				schema.object().members({
 					description: schema.string({}, [rules.required()])
 				}
 				)
 			),
-			class_plan_activities: schema.array().members(
+			activities: schema.array().members(
 				schema.object().members({
 					description: schema.string({}, [rules.required()])
 				}
 				)
 			),
-			class_plan_strategies: schema.array().members(
+			strategies: schema.array().members(
 				schema.object().members({
 					description: schema.string({}, [rules.required()])
 				}
 				)
 			),
-			class_plan_resources: schema.array().members(
+			resources: schema.array().members(
 				schema.object().members({
 					description: schema.string({}, [rules.required()])
 				}

@@ -6,7 +6,6 @@ import NameFormatter from 'App/Utils/NameFormatter';
 export default class FormationCourseSeeder extends BaseSeeder {
   public async run() {
 
-
     const formatedData = DataFormationCourse.map(row => {
       return {
         id: row[0],

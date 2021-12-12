@@ -7,7 +7,7 @@ export default class FormationCourses extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
       table.text('name')
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

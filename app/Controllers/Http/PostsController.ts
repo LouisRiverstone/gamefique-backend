@@ -81,25 +81,25 @@ export default class PostsController {
         post.related('tags').sync(payload.tags);
       }
 
-      if (payload.class_plans) {
+      if (payload.class_plan) {
         let classPlans;
 
-        if (payload.class_plans_id != null) {
-          classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plans_id }, { duration: payload.class_plans.duration })
+        if (payload.class_plan != null) {
+          classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plan.id }, { duration: payload.class_plan.duration })
         } else {
-          classPlans = await post.related('class_plan').create({ duration: payload.class_plans.duration })
+          classPlans = await post.related('class_plan').create({ duration: payload.class_plan.duration })
         }
 
 
-        await classPlans.related('class_plan_activities').query().where('class_plan_id', classPlans.id).delete();
-        await classPlans.related('class_plan_objectives').query().where('class_plan_id', classPlans.id).delete();
-        await classPlans.related('class_plan_resources').query().where('class_plan_id', classPlans.id).delete();
-        await classPlans.related('class_plan_strategies').query().where('class_plan_id', classPlans.id).delete();
+        await classPlans.related('activities').query().where('class_plan_id', classPlans.id).delete();
+        await classPlans.related('objectives').query().where('class_plan_id', classPlans.id).delete();
+        await classPlans.related('resources').query().where('class_plan_id', classPlans.id).delete();
+        await classPlans.related('strategies').query().where('class_plan_id', classPlans.id).delete();
 
-        await classPlans.related('class_plan_activities').createMany(this.mapArraysToCreateModels(payload.class_plans.activities, 'class_plan_id', classPlans.id))
-        await classPlans.related('class_plan_objectives').createMany(this.mapArraysToCreateModels(payload.class_plans.objectives, 'class_plan_id', classPlans.id))
-        await classPlans.related('class_plan_resources').createMany(this.mapArraysToCreateModels(payload.class_plans.resources, 'class_plan_id', classPlans.id))
-        await classPlans.related('class_plan_strategies').createMany(this.mapArraysToCreateModels(payload.class_plans.strategies, 'class_plan_id', classPlans.id))
+        await classPlans.related('activities').createMany(this.mapArraysToCreateModels(payload.class_plan.activities, 'class_plan_id', classPlans.id))
+        await classPlans.related('objectives').createMany(this.mapArraysToCreateModels(payload.class_plan.objectives, 'class_plan_id', classPlans.id))
+        await classPlans.related('resources').createMany(this.mapArraysToCreateModels(payload.class_plan.resources, 'class_plan_id', classPlans.id))
+        await classPlans.related('strategies').createMany(this.mapArraysToCreateModels(payload.class_plan.strategies, 'class_plan_id', classPlans.id))
       }
 
 
@@ -107,10 +107,10 @@ export default class PostsController {
 
       await post.load(loader => {
         loader.load('class_plan', (class_plan) => {
-          class_plan.preload('class_plan_activities')
-          class_plan.preload('class_plan_objectives')
-          class_plan.preload('class_plan_resources')
-          class_plan.preload('class_plan_strategies')
+          class_plan.preload('activities')
+          class_plan.preload('objectives')
+          class_plan.preload('resources')
+          class_plan.preload('strategies')
         })
       })
 
@@ -143,10 +143,10 @@ export default class PostsController {
         loader.load('school_subject')
         loader.load('class_plan', class_plan => {
           class_plan
-            .preload('class_plan_activities')
-            .preload('class_plan_objectives')
-            .preload('class_plan_resources')
-            .preload('class_plan_strategies')
+            .preload('activities')
+            .preload('objectives')
+            .preload('resources')
+            .preload('strategies')
         })
 
         loader.load('user', user => {
@@ -158,6 +158,7 @@ export default class PostsController {
 
       return post
     } catch (error) {
+      console.log(error)
       return response.unprocessableEntity(error.messages);
     }
   }
@@ -290,25 +291,26 @@ export default class PostsController {
       post.related('tags').sync(payload.tags);
     }
 
-    if (payload.class_plans) {
+
+    if (payload.class_plan) {
       let classPlans;
 
-      if (payload.class_plans_id != null) {
-        classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plans_id }, { duration: payload.class_plans.duration })
+      if (payload.class_plan != null) {
+        classPlans = await post.related('class_plan').updateOrCreate({ id: payload.class_plan.id }, { duration: payload.class_plan.duration })
       } else {
-        classPlans = await post.related('class_plan').create({ duration: payload.class_plans.duration })
+        classPlans = await post.related('class_plan').create({ duration: payload.class_plan.duration })
       }
 
 
-      await classPlans.related('class_plan_activities').query().where('class_plan_id', classPlans.id).delete();
-      await classPlans.related('class_plan_objectives').query().where('class_plan_id', classPlans.id).delete();
-      await classPlans.related('class_plan_resources').query().where('class_plan_id', classPlans.id).delete();
-      await classPlans.related('class_plan_strategies').query().where('class_plan_id', classPlans.id).delete();
+      await classPlans.related('activities').query().where('class_plan_id', classPlans.id).delete();
+      await classPlans.related('objectives').query().where('class_plan_id', classPlans.id).delete();
+      await classPlans.related('resources').query().where('class_plan_id', classPlans.id).delete();
+      await classPlans.related('strategies').query().where('class_plan_id', classPlans.id).delete();
 
-      await classPlans.related('class_plan_activities').createMany(this.mapArraysToCreateModels(payload.class_plans.activities, 'class_plan_id', classPlans.id))
-      await classPlans.related('class_plan_objectives').createMany(this.mapArraysToCreateModels(payload.class_plans.objectives, 'class_plan_id', classPlans.id))
-      await classPlans.related('class_plan_resources').createMany(this.mapArraysToCreateModels(payload.class_plans.resources, 'class_plan_id', classPlans.id))
-      await classPlans.related('class_plan_strategies').createMany(this.mapArraysToCreateModels(payload.class_plans.strategies, 'class_plan_id', classPlans.id))
+      await classPlans.related('activities').createMany(this.mapArraysToCreateModels(payload.class_plan.activities, 'class_plan_id', classPlans.id))
+      await classPlans.related('objectives').createMany(this.mapArraysToCreateModels(payload.class_plan.objectives, 'class_plan_id', classPlans.id))
+      await classPlans.related('resources').createMany(this.mapArraysToCreateModels(payload.class_plan.resources, 'class_plan_id', classPlans.id))
+      await classPlans.related('strategies').createMany(this.mapArraysToCreateModels(payload.class_plan.strategies, 'class_plan_id', classPlans.id))
     }
 
     await post.save()
@@ -317,10 +319,10 @@ export default class PostsController {
       loader.load('tags')
       loader.load('school_subject')
       loader.load('class_plan', (class_plan) => {
-        class_plan.preload('class_plan_activities')
-        class_plan.preload('class_plan_objectives')
-        class_plan.preload('class_plan_resources')
-        class_plan.preload('class_plan_strategies')
+        class_plan.preload('activities')
+        class_plan.preload('objectives')
+        class_plan.preload('resources')
+        class_plan.preload('strategies')
       })
     })
 
