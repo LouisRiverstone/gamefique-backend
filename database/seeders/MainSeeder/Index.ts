@@ -25,5 +25,6 @@ export default class IndexSeeder extends BaseSeeder {
     await this.runSeeder(await import('../SchoolSubject'))
     await this.runSeeder(await import('../SchoolType'))
     await this.runSeeder(await import('../Tag'))
+    await this.runSeeder(await import('../ProgrammingLanguage'))
   }
 }

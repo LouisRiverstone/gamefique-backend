@@ -81,6 +81,9 @@ Route.group(async () => {
       Route.get('/', 'SchoolSubjectsController.index')
     }).prefix('/school_subjects');
 
+    Route.group(async () => {
+      Route.post('/', 'SnippetsController.store')
+    }).prefix('/snippets');
 
     Route.get('uploads/:filename', async ({ params, response }) => {
       return response.attachment(

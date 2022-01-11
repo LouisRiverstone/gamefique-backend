@@ -131,7 +131,6 @@ export default class PostsController {
       }
 
       await post.load((loader) => {
-
         loader.load('comments', comments => {
           comments.preload('user', user => {
             user.preload('school').preload('formation_courses').preload('formation_institute');
@@ -153,7 +152,9 @@ export default class PostsController {
           user.preload('school').preload('formation_courses').preload('formation_institute');
         });
 
-        loader.load('snippets')
+        loader.load('snippets', snippets => {
+          snippets.preload('programming_language')
+        })
       })
 
       return post
