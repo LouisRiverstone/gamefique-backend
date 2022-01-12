@@ -103,6 +103,10 @@ export default class PostsController {
       }
 
 
+      if (payload.snippets) {
+        await post.related('snippets').createMany(payload.snippets);
+      }
+
       await post.save();
 
       await post.load(loader => {
@@ -312,6 +316,12 @@ export default class PostsController {
       await classPlans.related('objectives').createMany(this.mapArraysToCreateModels(payload.class_plan.objectives, 'class_plan_id', classPlans.id))
       await classPlans.related('resources').createMany(this.mapArraysToCreateModels(payload.class_plan.resources, 'class_plan_id', classPlans.id))
       await classPlans.related('strategies').createMany(this.mapArraysToCreateModels(payload.class_plan.strategies, 'class_plan_id', classPlans.id))
+    }
+
+    await post.related('snippets').query().where('post_id', post.id).delete();
+
+    if (payload.snippets) {
+      await post.related('snippets').createMany(payload.snippets);
     }
 
     await post.save()

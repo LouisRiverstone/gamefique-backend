@@ -12,6 +12,13 @@ export default class PublishPostValidator {
 		html: schema.string({}, [rules.required()]),
 		school_subject_id: schema.number([rules.required()]),
 		tags: schema.array().members(schema.number([rules.required()])),
+		snippets: schema.array.optional().members(
+			schema.object().members({
+				name: schema.string({}, [rules.required()]),
+				content: schema.string({}, [rules.required()]),
+				programming_language_id: schema.number([rules.required(), rules.exists({ table: 'programming_languages', column: 'id' })])
+			})
+		),
 		class_plan: schema.object().members({
 			id: schema.number([rules.required(), rules.exists({ table: 'class_plans', column: 'id' })]),
 			duration: schema.string({}, [rules.required()]),

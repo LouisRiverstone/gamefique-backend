@@ -52,7 +52,7 @@ export default class Snippet extends BaseModel {
     snippet.content = null;
   }
 
-  @afterDelete()
+  @beforeDelete()
   public static async deleteFile(snippet: Snippet) {
     const {
       file_extension
