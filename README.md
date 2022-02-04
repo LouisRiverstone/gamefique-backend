@@ -1,7 +1,8 @@
 # Gamefique Back-End
 
-Gamefique foi pensado como uma plataforma online colaborativa que auxiliasse os docentes da área de matemática que estejam aptos a dar lecionar na segunda etapa do ensino fundamental visando a interdisciplinaridade da disciplina de matemática com desenvolvimento de jogos digitais e gamificação. Para que isso fosse possível, foi necessário fazer um estudo sobre jogos digitais e desenvolvimento de jogos digitais aplicados na educação.
+Gamefique foi pensado como uma plataforma online colaborativa que auxiliasse os docentes da área de matemática que estejam aptos a dar lecionar na segunda etapa do ensino fundamental visando a interdisciplinaridade da disciplina de matemática com desenvolvimento de jogos digitais e gamificação.
 
+Este é um prototipo para ser usado no meu TCC que esta disponivel [Aqui](https://nodejs.org/en/)! indico ler para entender todo o contexto que cerca esta plataforma.
 
 ## Instalação
 
