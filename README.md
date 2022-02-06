@@ -14,9 +14,34 @@ npm install
 
 ## Uso
 
+Crie o arquivo .env baseando-se no arquivo .env.example. Após isso, faça as migrações para inserir as tabelas no banco com o seguinte comando:
+
+```bash
+node ace migration:run
+```
+
+e depois popule as tabelas frias com o seguinte comando:
+
+
+```bash
+node ace db:seed
+```
+
+e para executar a api em modo de desenvolvimento, use esse comando:
+
 ```bash
 node ace serve --watch
 ```
+
+## Complilando
+
+Para compilar o backend para um server javascript utilize:
+
+
+```bash
+node ace build
+```
+
 
 ## Contribuição
 Pull-request são bem-vindos. Para grandes mudanças, abra um problema primeiro para discutir o que você gostaria de mudar.

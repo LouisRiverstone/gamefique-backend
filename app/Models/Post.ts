@@ -70,8 +70,8 @@ export default class Post extends BaseModel {
   @column()
   public post_status_id: number
 
-  @hasOne(() => PostsStatus, { foreignKey: 'id' })
-  public post_status: HasOne<typeof PostsStatus>
+  @belongsTo(() => PostsStatus, { foreignKey: 'post_status_id' })
+  public post_status: BelongsTo<typeof PostsStatus>
 
   @column()
   public school_subject_id: number

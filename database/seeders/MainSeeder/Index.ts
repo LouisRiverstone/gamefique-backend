@@ -9,6 +9,7 @@ export default class IndexSeeder extends BaseSeeder {
      * only
      */
     if (seeder.default.developmentOnly && !Application.inDev) {
+
       return
     }
 

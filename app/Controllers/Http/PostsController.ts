@@ -14,9 +14,9 @@ export default class PostsController {
   public async index({ request }: HttpContextContract) {
     const post = request.only(['page', 'tag', 'search'])
     const page = post?.page || 1
-    const max = 20
+    const max = 5
 
-    const postList = Post.query().where('post_status_id', 2).whereNull('deletedAt').preload('comments')
+    const postList = Post.query().where('post_status_id', 2).whereNull('deletedAt').preload('comments').orderBy('id', 'desc')
       .preload('like')
       .preload('tags')
       .preload('school_subject')
@@ -135,6 +135,7 @@ export default class PostsController {
       }
 
       await post.load((loader) => {
+
         loader.load('comments', comments => {
           comments.preload('user', user => {
             user.preload('school').preload('formation_courses').preload('formation_institute');
@@ -144,6 +145,7 @@ export default class PostsController {
         loader.load('like')
         loader.load('tags')
         loader.load('school_subject')
+        loader.load('post_status')
         loader.load('class_plan', class_plan => {
           class_plan
             .preload('activities')
@@ -285,7 +287,6 @@ export default class PostsController {
   }
 
   private async updatePost(post: Post, payload: any, postStatus: number) {
-
     post.title = payload.title
     post.description = payload.description
     post.html = payload.html
@@ -329,6 +330,7 @@ export default class PostsController {
     await post.load(loader => {
       loader.load('tags')
       loader.load('school_subject')
+      loader.load('post_status')
       loader.load('class_plan', (class_plan) => {
         class_plan.preload('activities')
         class_plan.preload('objectives')

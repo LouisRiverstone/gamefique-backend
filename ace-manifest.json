@@ -1,8 +1,20 @@
 {
   "commands": {
+    "generate:fake_data": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/GenerateFakeData",
+      "commandName": "generate:fake_data",
+      "description": "Gera dados falsos para simulação da plataforma",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
     "dump:rcfile": {
       "settings": {},
-      "commandPath": "@adonisjs/core/commands/DumpRc",
+      "commandPath": "@adonisjs/core/build/commands/DumpRc",
       "commandName": "dump:rcfile",
       "description": "Dump contents of .adonisrc.json file along with defaults",
       "args": [],
@@ -13,7 +25,7 @@
       "settings": {
         "loadApp": true
       },
-      "commandPath": "@adonisjs/core/commands/ListRoutes",
+      "commandPath": "@adonisjs/core/build/commands/ListRoutes",
       "commandName": "list:routes",
       "description": "List application routes",
       "args": [],
@@ -29,7 +41,7 @@
     },
     "generate:key": {
       "settings": {},
-      "commandPath": "@adonisjs/core/commands/GenerateKey",
+      "commandPath": "@adonisjs/core/build/commands/GenerateKey",
       "commandName": "generate:key",
       "description": "Generate a new APP_KEY secret",
       "args": [],
@@ -83,7 +95,9 @@
       ]
     },
     "make:model": {
-      "settings": {},
+      "settings": {
+        "loadApp": true
+      },
       "commandPath": "@adonisjs/lucid/build/commands/MakeModel",
       "commandName": "make:model",
       "description": "Make a new Lucid model",
