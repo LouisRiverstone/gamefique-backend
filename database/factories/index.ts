@@ -34,7 +34,7 @@ export const CommentFactory = Factory
 
         return {
             user_id: user.id,
-            comment: faker.lorem.sentences(faker.datatype.number(2))
+            comment: faker.lorem.words(faker.datatype.number(10) || 2)
         }
     })
     .build()
@@ -42,7 +42,7 @@ export const CommentFactory = Factory
 export const StrategyFactory = Factory
     .define(ClassPlanStrategy, ({ faker }) => {
         return {
-            'description': faker.lorem.sentences(faker.datatype.number(3))
+            'description': faker.lorem.words(faker.datatype.number(5) || 2)
         }
     })
     .build()
@@ -50,7 +50,7 @@ export const StrategyFactory = Factory
 export const ResoucesFactory = Factory
     .define(ClassPlanResource, ({ faker }) => {
         return {
-            'description': faker.lorem.sentences(faker.datatype.number(3))
+            'description': faker.lorem.words(faker.datatype.number(5) || 2)
         }
     })
     .build()
@@ -58,7 +58,7 @@ export const ResoucesFactory = Factory
 export const ObjectivesFactory = Factory
     .define(ClassPlanObjective, ({ faker }) => {
         return {
-            'description': faker.lorem.sentences(faker.datatype.number(3))
+            'description': faker.lorem.words(faker.datatype.number(5) || 2)
         }
     })
     .build()
@@ -66,7 +66,7 @@ export const ObjectivesFactory = Factory
 export const ActivitiesFactory = Factory
     .define(ClassPlanActivity, ({ faker }) => {
         return {
-            'description': faker.lorem.sentences(faker.datatype.number(3))
+            'description': faker.lorem.words(faker.datatype.number(5) || 2)
         }
     })
     .build()
@@ -88,7 +88,7 @@ export const PostFactory = Factory
         return {
             title: faker.lorem.sentence(),
             description: faker.lorem.sentence(),
-            temp_html: `<p style=\"text-align: justify\">${faker.lorem.paragraphs(faker.datatype.number(5))}</p>`,
+            temp_html: `<p style=\"text-align: justify\">${faker.lorem.paragraphs(3)}</p>`,
             school_subject_id: 1,
         }
     }).after('create', async (factory, model, ctx) => {

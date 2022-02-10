@@ -47,7 +47,8 @@ export default class PostsController {
       .whereNull('deletedAt')
       .preload('like')
       .withAggregate('like', (query) => {
-        query.countDistinct('user_id').as('likes')
+        // query.countDistinct('user_id').as('likes')
+        query.count('user_id').as('likes')
       })
       .preload('user')
       .whereRaw(`updated_at BETWEEN '${endDate}' AND '${startDate}'`)

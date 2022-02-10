@@ -33,16 +33,18 @@ export default class GenerateFakeData extends BaseCommand {
 
     const { UserFactory } = await (import('Database/factories'))
 
-    await UserFactory.with('posts', Faker.datatype.number(10), (post) => {
+    await UserFactory.createMany(2);
+
+    await UserFactory.with('posts', Faker.datatype.number(3), (post) => {
       post.apply('published')
       post.with('comments', Faker.datatype.number(5))
-      post.with('like', Faker.datatype.number(100))
+      post.with('like', Faker.datatype.number(10))
       post.with('class_plan', 1, (class_plan) => {
-        class_plan.with('activities', Faker.datatype.number(5))
-        class_plan.with('resources', Faker.datatype.number(3))
-        class_plan.with('strategies', Faker.datatype.number(3))
-        class_plan.with('objectives', Faker.datatype.number(3))
+        class_plan.with('activities', Faker.datatype.number(5) || 1)
+        class_plan.with('resources', Faker.datatype.number(3) || 1)
+        class_plan.with('strategies', Faker.datatype.number(3) || 1)
+        class_plan.with('objectives', Faker.datatype.number(3) || 1)
       })
-    }).createMany(10)
+    }).createMany(5)
   }
 }

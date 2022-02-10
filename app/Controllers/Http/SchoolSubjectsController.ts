@@ -3,7 +3,7 @@ import SchoolSubject from 'App/Models/SchoolSubject'
 
 export default class SchoolSubjectsController {
   public async index({ }: HttpContextContract) {
-    return SchoolSubject.query().orderBy('id', 'asc')
+    return SchoolSubject.query().orderBy('id', 'asc').where('id', 1)
   }
 
   public async create({ }: HttpContextContract) {
